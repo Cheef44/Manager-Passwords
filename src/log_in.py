@@ -1,6 +1,8 @@
 import json
 import hashlib
 import re
+from Crypto.Random import get_random_bytes
+import pickle
 
 #Класс регистрации и входа в программу
 class LogIn:
@@ -9,8 +11,34 @@ class LogIn:
         self.user_password = user_password
         self.user_data = f"{self.user_name}{self.user_password}"
         
+    #Функция регистарции
     def registration(self):
-        pass
+        if self.validation():
+            sault_data = self.sault_func(user_name=self.user_name,user_password=self.user_password)
+            sault = str(sault_data["sault"])
+            hash_user_name = str(hashlib.sha3_512(sault_data["sault_user_name"]).digest()) #Хэширование логина и пароля
+            hash_user_password = str(hashlib.sha3_512(sault_data["sault_user_password"]).digest())
+
+            user_data = {
+                "sault": sault,
+                "user_name": hash_user_name,
+                "user_password": hash_user_password
+            }
+
+            with open("data/user.json", "w") as user_data_file:
+                json.dump(user_data, user_data_file)
+                return True
+        else:
+            return False
+        
+    #Генерация соли и добавление соли к данным пользователя
+    def sault_func(self, user_name:str, user_password:str, sault:bytes=get_random_bytes(32)):
+        user_name = bytes(user_name, encoding="utf-8")
+        user_password = bytes(user_password, encoding="utf-8")
+        sault_user_name = sault[:len(sault)//2]+user_name+sault[len(sault)//2:]
+        sault_user_password = sault[:len(sault)//2]+user_password+sault[len(sault)//2:]
+        
+        return {"sault": sault, "sault_user_name": sault_user_name, "sault_user_password": sault_user_password}
 
     #Проверка валидации данных
     def validation(self):

@@ -12,3 +12,7 @@ class API:
     #Вызов функции регистрации
     def registration_api(self, user_name:str, user_password:str):
         return LogIn(user_name, user_password).registration()
+    
+    #Вызов функции входа
+    def log_in_api(self, user_name:str, user_password:str):
+        return LogIn(user_name, user_password).log_in()

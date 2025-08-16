@@ -1,11 +1,13 @@
 import sqlite3
 
+#Класс ьазы данных
 class DataBase:
     def __init__(self, sault:bytes=None, user_password:bytes=None, user_name:bytes=None) -> None:
         self.sault = sault
         self.user_password = user_password
         self.user_name = user_name
     
+    #Функция создания таблицы
     def create_login_db(self):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
@@ -19,7 +21,8 @@ class DataBase:
             cursor.close()
             conn.commit()
             return True
-            
+    
+    #Функция получения данных из таблицы
     def retrieve_data(self):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()

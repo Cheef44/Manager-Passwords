@@ -1,8 +1,7 @@
-import json
 import hashlib
 import re
 from Crypto.Random import get_random_bytes
-import pickle
+from src import db
 
 #Класс регистрации и входа в программу
 class LogIn:
@@ -19,15 +18,7 @@ class LogIn:
             hash_user_name = str(hashlib.sha3_512(sault_data["sault_user_name"]).digest()) #Хэширование логина и пароля
             hash_user_password = str(hashlib.sha3_512(sault_data["sault_user_password"]).digest())
 
-            user_data = {
-                "sault": sault,
-                "user_name": hash_user_name,
-                "user_password": hash_user_password
-            }
-
-            with open("data/user.json", "w") as user_data_file:
-                json.dump(user_data, user_data_file)
-                return True
+            return db.DataBase(sault=sault, user_password=hash_user_password, user_name=hash_user_name).create_login_db()    
         else:
             return False
         

@@ -14,14 +14,25 @@ class LogIn:
     def registration(self):
         if self.validation():
             sault_data = self.sault_func(user_name=self.user_name,user_password=self.user_password)
-            sault = str(sault_data["sault"])
-            hash_user_name = str(hashlib.sha3_512(sault_data["sault_user_name"]).digest()) #Хэширование логина и пароля
-            hash_user_password = str(hashlib.sha3_512(sault_data["sault_user_password"]).digest())
+            sault = sault_data["sault"]
+            hash_user_name = hashlib.sha3_512(bytes(self.user_name, encoding="utf-8")).digest() #Хэширование логина и пароля
+            hash_user_password = hashlib.sha3_512(sault_data["sault_user_password"]).digest()
 
             return db.DataBase(sault=sault, user_password=hash_user_password, user_name=hash_user_name).create_login_db()    
         else:
             return False
-        
+    
+    #Функция входа в программу
+    def log_in(self):
+        hash_user_name = hashlib.sha3_512(bytes(self.user_name, encoding="utf-8")).digest()
+        user_db_data = db.DataBase(user_name=hash_user_name).retrieve_data()
+        sault_data = self.sault_func(user_name=self.user_name, user_password=self.user_password, sault=user_db_data["sault"])
+        hash_user_password = hashlib.sha3_512(sault_data["sault_user_password"]).digest()
+        if user_db_data["user_name"] == hash_user_name and user_db_data["user_password"] == hash_user_password:
+            return True
+        else:
+            return False
+     
     #Генерация соли и добавление соли к данным пользователя
     def sault_func(self, user_name:str, user_password:str, sault:bytes=get_random_bytes(32)):
         user_name = bytes(user_name, encoding="utf-8")

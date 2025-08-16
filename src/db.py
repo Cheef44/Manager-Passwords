@@ -1,7 +1,7 @@
 import sqlite3
 
 class DataBase:
-    def __init__(self, sault=None, user_password = None, user_name = None) -> None:
+    def __init__(self, sault:bytes=None, user_password:bytes=None, user_name:bytes=None) -> None:
         self.sault = sault
         self.user_password = user_password
         self.user_name = user_name
@@ -10,12 +10,24 @@ class DataBase:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute("""CREATE TABLE IF NOT EXISTS user(
-                sault TEXT,
-                user_name TEXT,
-                user_password TEXT);
+                sault BLOB,
+                user_name BLOB,
+                user_password BLOB);
             """)
             
             cursor.execute("INSERT INTO user(sault, user_name, user_password) VALUES(?, ?, ?);", (self.sault, self.user_name, self.user_password))
             cursor.close()
             conn.commit()
             return True
+            
+    def retrieve_data(self):
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            sault = cursor.execute("SELECT sault FROM user WHERE user_name = ?;", (self.user_name,)).fetchall()
+            user_name = cursor.execute("""SELECT user_name FROM user""").fetchall()
+            user_password = cursor.execute("""SELECT user_password FROM user""").fetchall()
+            return {
+                "sault":sault[0][0],
+                "user_name":user_name[0][0],
+                "user_password":user_password[0][0]
+                }

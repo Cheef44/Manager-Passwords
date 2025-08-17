@@ -1,4 +1,5 @@
 from src.log_in_interface import Ui_log_in
+from src.main_window_interface import Ui_MainWindow
 from PyQt6.QtWidgets import QMainWindow
 from src.api import API
 
@@ -14,10 +15,24 @@ class LogInApp(Ui_log_in, QMainWindow):
     def registration_button(self):
         if self.password_input_1.text() == self.password_input_2.text():
             if API.registration_api(self, user_name=self.login_input.text(), user_password=self.password_input_1.text()):
-                pass
+                self.swap_mainwindow()
     
     #Взаимодействие функции входа в программу с интерфейсом через API
     def log_in_button(self):
         if self.password_input_1.text() == self.password_input_2.text():
             if API.log_in_api(self, user_name=self.login_input.text(), user_password=self.password_input_1.text()):
-                pass
+                self.swap_mainwindow()
+    
+    #Функция перехода на основное окно
+    def swap_mainwindow(self):
+        self.close()
+        self.window = MainWindow(self.login_input.text())
+        self.window.show()
+
+#Класс функциональности интерфейса основного окна 
+class MainWindow(Ui_MainWindow, QMainWindow):
+    def __init__(self, user_name_data):
+        super().__init__()
+        self.setupUi(self)
+        self.user_name_data = user_name_data
+        self.user_name.setText(user_name_data)

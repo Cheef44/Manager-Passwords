@@ -1,6 +1,7 @@
 from src.log_in_interface import Ui_log_in
 from src.main_window_interface import Ui_MainWindow
-from PyQt6.QtWidgets import QMainWindow
+from src.dialog_add_password_interface import Ui_Add_password
+from PyQt6.QtWidgets import QMainWindow, QDialog
 from src.api import API
 
 #Класс функциональности интерфейса регистрации и авторизации
@@ -36,3 +37,27 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.user_name_data = user_name_data
         self.user_name.setText(user_name_data)
+        self.add_data.clicked.connect(self.open_dialog_add_password)
+    
+    #Открытие диалогового окна
+    def open_dialog_add_password(self):
+        dialog_window = DialogAddPassword()
+        dialog_window.exec()
+
+#Диалоговое окно добавления пароля
+class DialogAddPassword(Ui_Add_password, QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        try:
+            self.buttonBox.accepted.disconnect()
+        except TypeError:
+            pass
+        self.buttonBox.accepted.connect(self.required_fields_validator)
+    
+    #Валидатор обязательных полей
+    def required_fields_validator(self):
+        if not self.password_input.text().split():
+            self.password_input.setStyleSheet("border: 1px solid red;")
+        else:
+            self.accept()

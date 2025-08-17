@@ -26,7 +26,10 @@ class DataBase:
     def retrieve_data(self):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
-            sault = cursor.execute("SELECT sault FROM user WHERE user_name = ?;", (self.user_name,)).fetchall()
+            if self.user_name:
+                sault = cursor.execute("SELECT sault FROM user WHERE user_name = ?;", (self.user_name,)).fetchall()
+            else:
+                sault = [[[]]]
             user_name = cursor.execute("""SELECT user_name FROM user""").fetchall()
             user_password = cursor.execute("""SELECT user_password FROM user""").fetchall()
             return {

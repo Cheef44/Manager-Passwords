@@ -22,6 +22,23 @@ class DataBase:
             conn.commit()
             return True
     
+    #Функция создания таблицы паролей
+    def create_passwords_db(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""CREATE TABLE IF NOT EXISTS password(
+                name TEXT,
+                name_sit TEXT,
+                login TEXT,
+                mail BLOB,
+                password BLOB NOT NULL);
+            """)
+            
+            cursor.execute("INSERT INTO password(name, name_sit, login, mail, password) VALUES(?, ?, ?, ?, ?);", (name, name_sit, login, mail, password))
+            cursor.close()
+            conn.commit()
+            return True
+            
     #Функция получения данных из таблицы
     def retrieve_data(self):
         with sqlite3.connect('database.db') as conn:

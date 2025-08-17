@@ -60,4 +60,5 @@ class DialogAddPassword(Ui_Add_password, QDialog):
         if not self.password_input.text().split():
             self.password_input.setStyleSheet("border: 1px solid red;")
         else:
+            API.add_password(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), bytes(self.email_input.text(), encoding="utf-8"), bytes(self.password_input.text(), encoding="utf-8"))
             self.accept()

@@ -20,7 +20,11 @@ class API:
     
     #Вызов функции получения данных пользователя
     def data_user_api(self):
-        return DataBase().retrieve_data()
+        return DataBase().retrieve_data_user()
+    
+    #Вызов функции получения данных паролей
+    def data_passwords_api(self):
+        return DataBase().retrieve_data_passwords()
     
     #Вызов функции создания таблицы паролей
     def add_password(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):

@@ -54,10 +54,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     @pyqtSlot(bool)
     def update_table(self):
         data = API.data_passwords_api(self)
-        header = ["Имя записи", "Имя сайта/ссылка", "Логин", "Почта", "Пароль"]
-        model_table = PasswordsTabel(data, header)
-        self.table_passwords.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        self.table_passwords.setModel(model_table)
+        if data:
+            header = ["Имя записи", "Имя сайта/ссылка", "Логин", "Почта", "Пароль"]
+            model_table = PasswordsTabel(data, header)
+            self.table_passwords.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+            self.table_passwords.setModel(model_table)
         
 
 #Диалоговое окно добавления пароля

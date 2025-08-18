@@ -59,5 +59,8 @@ class DataBase:
     def retrieve_data_passwords(self):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
-            passwords = cursor.execute("SELECT * FROM password;").fetchall()
-            return passwords
+            try:
+                passwords = cursor.execute("SELECT * FROM password;").fetchall()
+                return passwords
+            except:
+                pass

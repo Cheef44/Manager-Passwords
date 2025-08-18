@@ -25,7 +25,7 @@ class LogIn:
     #Функция входа в программу
     def log_in(self):
         hash_user_name = hashlib.sha3_512(bytes(self.user_name, encoding="utf-8")).digest()
-        user_db_data = db.DataBase(user_name=hash_user_name).retrieve_data()
+        user_db_data = db.DataBase(user_name=hash_user_name).retrieve_data_user()
         sault_data = self.sault_func(user_name=self.user_name, user_password=self.user_password, sault=user_db_data["sault"])
         hash_user_password = hashlib.sha3_512(sault_data["sault_user_password"]).digest()
         if user_db_data["user_name"] == hash_user_name and user_db_data["user_password"] == hash_user_password:

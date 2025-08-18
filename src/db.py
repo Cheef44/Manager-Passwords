@@ -39,8 +39,8 @@ class DataBase:
             conn.commit()
             return True
             
-    #Функция получения данных из таблицы
-    def retrieve_data(self):
+    #Функция получения данных из таблицы пользователя
+    def retrieve_data_user(self):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             if self.user_name:
@@ -54,3 +54,10 @@ class DataBase:
                 "user_name":user_name[0][0],
                 "user_password":user_password[0][0]
                 }
+    
+    #Функция получения данных из таблицы паролей
+    def retrieve_data_passwords(self):
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            passwords = cursor.execute("SELECT * FROM password;").fetchall()
+            return passwords

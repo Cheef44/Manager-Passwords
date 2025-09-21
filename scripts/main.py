@@ -6,6 +6,7 @@ from src.api import API
 from src.table_model import PasswordsTabel
 from PyQt6.QtWidgets import QHeaderView
 from PyQt6.QtCore import pyqtSignal, pyqtSlot
+import logging
 
 #Класс функциональности интерфейса регистрации и авторизации
 class LogInApp(Ui_log_in, QMainWindow):
@@ -29,6 +30,7 @@ class LogInApp(Ui_log_in, QMainWindow):
     
     #Функция перехода на основное окно
     def swap_mainwindow(self):
+        API.keys_generation(self)
         self.close()
         self.window = MainWindow(self.login_input.text())
         self.window.show()
@@ -81,6 +83,9 @@ class DialogAddPassword(Ui_Add_password, QDialog):
         if not self.password_input.text().split():
             self.password_input.setStyleSheet("border: 1px solid red;")
         else:
-            API.add_password(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), bytes(self.email_input.text(), encoding="utf-8"), bytes(self.password_input.text(), encoding="utf-8"))
+            enc_password_input = API.encryption_data(self, self.password_input.text())
+            enc_email_input = API.encryption_data(self, self.email_input.text())
+            logging.debug(enc_password_input)
+            API.add_password(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), enc_email_input, enc_password_input)
             self.saved_table_passwords.emit(True)
             self.accept()

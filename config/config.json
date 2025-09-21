@@ -1,0 +1,12 @@
+{
+    "path":{
+        "encryption_keys_path":{
+            "sync_key_path": "data/sync_key.pub",
+            "async_keys_path":{
+                "public_key_path": "data/async_public_key.pub",
+                "private_key_path": "data/async_private_key"
+            },
+            "vectore_path": "data/vectore.bin"
+        }
+    }
+}

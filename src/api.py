@@ -6,6 +6,7 @@ from src.log_in import LogIn
 from src.db import DataBase
 from src.generation_keys import Keys
 from src.encryption import EncryptionText
+from src.decryption import Decryption
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -39,3 +40,7 @@ class API:
     #Вызов функции шифрования текста    
     def encryption_data(self, data:str):
         return EncryptionText(data).encryption_text()
+    
+    #Вызов функции дешифровки данных
+    def decryption_data(self, data:bytes):
+        return Decryption(data).decryption()

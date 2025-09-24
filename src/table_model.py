@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
 import chardet
+from src.api import API
 
 #Класс модели таблицы паролей
 class PasswordsTabel(QAbstractTableModel):
@@ -23,8 +24,7 @@ class PasswordsTabel(QAbstractTableModel):
         
         if role == Qt.ItemDataRole.DisplayRole:
             if type(self._data[index.row()][index.column()]) == bytes:
-                if chardet.detect(self._data[index.row()][index.column()])["encoding"] != None:
-                    return str(self._data[index.row()][index.column()].decode(chardet.detect(self._data[index.row()][index.column()])["encoding"]))
+                return str(API.decryption_data(self, self._data[index.row()][index.column()]))
             else:
                 return str(self._data[index.row()][index.column()])
         

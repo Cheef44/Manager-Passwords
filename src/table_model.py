@@ -24,7 +24,10 @@ class PasswordsTabel(QAbstractTableModel):
         
         if role == Qt.ItemDataRole.DisplayRole:
             if type(self._data[index.row()][index.column()]) == bytes:
-                return str(API.decryption_data(self, self._data[index.row()][index.column()]))
+                try:
+                    return str(API.decryption_data(self, self._data[index.row()][index.column()]))
+                except TypeError:
+                    return ""
             else:
                 return str(self._data[index.row()][index.column()])
         

@@ -27,6 +27,7 @@ class DataBase:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute("""CREATE TABLE IF NOT EXISTS password(
+                id INTEGER PRIMARY KEY,
                 name TEXT,
                 name_sit TEXT,
                 login TEXT,
@@ -38,6 +39,14 @@ class DataBase:
             cursor.close()
             conn.commit()
             return True
+    
+    #Метод обновления таблицы паролей
+    def update_password(self, id:int, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE password SET name=?, name_sit=?, login=?, mail=?, password=? WHERE id=?;", (name, name_sit, login, mail, password, id))
+            cursor.close()
+            conn.commit()
             
     #Функция получения данных из таблицы пользователя
     def retrieve_data_user(self):

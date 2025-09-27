@@ -8,8 +8,25 @@ import logging
 class PasswordsTabel(QAbstractTableModel):
     def __init__(self, data, header):
         super().__init__()
-        self._data = [list(item) for item in data]
+        self._data = self.data_processing([list(item) for item in data])
         self._header = header
+        
+    #Обработка данных для быстрой подгрузки
+    def data_processing(self, data:list):
+        for key in range(len(data)):
+            values = []
+            for value in data[key]:
+                if type(value) != bytes:
+                    values.append(value)
+                else:
+                    try:
+                        values.append(API.decryption_data(self, value))
+                    except TypeError:
+                        values.append("")
+                if len(values) == len(data[key]):
+                    data[key] = values
+        
+        return data
     
     #Функция возвращающая количество строк
     def rowCount(self, parent = None):

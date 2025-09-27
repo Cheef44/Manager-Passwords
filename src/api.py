@@ -33,6 +33,10 @@ class API:
     def add_password(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
         return DataBase.create_passwords_db(self, name, name_sit, login, mail, password)
     
+    #Вызов функции обновления таблицы паролей
+    def uptade_password(self, id:int, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
+        return DataBase.update_password(self, id, name, name_sit, login, mail, password)
+    
     #Вызов функции генерации ключей шифрования
     def keys_generation(self):
         Keys().run()

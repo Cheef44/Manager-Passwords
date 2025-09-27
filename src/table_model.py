@@ -1,12 +1,14 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
 import chardet
 from src.api import API
+import logging
+#logging.basicConfig(level=logging.DEBUG)
 
 #Класс модели таблицы паролей
 class PasswordsTabel(QAbstractTableModel):
     def __init__(self, data, header):
         super().__init__()
-        self._data = data
+        self._data = [list(item) for item in data]
         self._header = header
     
     #Функция возвращающая количество строк
@@ -25,14 +27,28 @@ class PasswordsTabel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             if type(self._data[index.row()][index.column()]) == bytes:
                 try:
-                    return str(API.decryption_data(self, self._data[index.row()][index.column()]))
+                    return API.decryption_data(self, self._data[index.row()][index.column()])
                 except TypeError:
                     return ""
             else:
-                return str(self._data[index.row()][index.column()])
+                return self._data[index.row()][index.column()]
         
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
+    
+    #Метод редактирования таблицы
+    def setData(self, index, value, role=Qt.ItemDataRole.EditRole):
+        if role == Qt.ItemDataRole.EditRole:
+            self._data[index.row()][index.column()] = value
+            self.dataChanged.emit(index, index, [Qt.ItemDataRole.DisplayRole])
+            if type(self._data[index.row()][-1]) != bytes:
+                self._data[index.row()][-1] = API.encryption_data(self, self._data[index.row()][-1])
+            API.uptade_password(self, id=self._data[index.row()][0], name=self._data[index.row()][1], name_sit=self._data[index.row()][2], login=self._data[index.row()][3], mail=self._data[index.row()][4], password=self._data[index.row()][-1])
+            return True
+        return False
+    
+    def flags(self, index):
+        return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable
     
     #Функция возвращающая заголовки в таблицу
     def headerData(self, section, orientation, role):

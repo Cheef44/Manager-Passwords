@@ -7,6 +7,8 @@ from src.table_model import PasswordsTabel
 from PyQt6.QtWidgets import QHeaderView
 from PyQt6.QtCore import pyqtSignal, pyqtSlot
 import logging
+from src.create_context_menu import ContextMenu
+from PyQt6.QtCore import Qt
 
 #Класс функциональности интерфейса регистрации и авторизации
 class LogInApp(Ui_log_in, QMainWindow):
@@ -30,7 +32,7 @@ class LogInApp(Ui_log_in, QMainWindow):
     
     #Функция перехода на основное окно
     def swap_mainwindow(self):
-        API.keys_generation(self)
+        API.keys_generation_api(self)
         self.close()
         self.window = MainWindow(self.login_input.text())
         self.window.show()
@@ -42,8 +44,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.user_name_data = user_name_data
         self.user_name.setText(user_name_data)
+        self.setMouseTracking(True)
         self.update_table()
         self.add_data.clicked.connect(self.open_dialog_add_password)
+        self.table_passwords.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.table_passwords.customContextMenuRequested.connect(self.del_context_menu)
     
     #Открытие диалогового окна
     @pyqtSlot()
@@ -57,10 +62,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def update_table(self):
         data = API.data_passwords_api(self)
         if data:
-            header = ["Имя записи", "Имя сайта/ссылка", "Логин", "Почта", "Пароль"]
+            header = ["ID","Имя записи", "Имя сайта/ссылка", "Логин", "Почта", "Пароль"]
             model_table = PasswordsTabel(data, header)
             self.table_passwords.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
             self.table_passwords.setModel(model_table)
+    
+    #Метод вызова контекстного меню удаления
+    def del_context_menu(self, position):
+        index = self.table_passwords.indexAt(position)
+        ContextMenu(menu={"Удалить": lambda: API.del_data_api(self, str(index.row()+1))})
+        self.table_passwords.model().removeRow(row=index.row())
         
 
 #Диалоговое окно добавления пароля
@@ -83,9 +94,10 @@ class DialogAddPassword(Ui_Add_password, QDialog):
         if not self.password_input.text().split():
             self.password_input.setStyleSheet("border: 1px solid red;")
         else:
-            enc_password_input = API.encryption_data(self, self.password_input.text())
-            enc_email_input = API.encryption_data(self, self.email_input.text())
+            enc_password_input = API.encryption_data_api(self, self.password_input.text())
+            enc_email_input = API.encryption_data_api(self, self.email_input.text())
             logging.debug(enc_password_input)
-            API.add_password(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), enc_email_input, enc_password_input)
+            API.add_password_api(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), enc_email_input, enc_password_input)
             self.saved_table_passwords.emit(True)
             self.accept()
+            self.saved_table_passwords.emit(False)

@@ -78,7 +78,7 @@ class DataBase:
     def del_data(self, id:int):
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM password WHERE id=?;", (id))
+            cursor.execute("DELETE FROM password WHERE id=?;", (id,))
             cursor.execute("""CREATE TABLE temp(
                 id INTEGER PRIMARY KEY,
                 name TEXT,

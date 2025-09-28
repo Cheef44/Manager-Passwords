@@ -30,21 +30,25 @@ class API:
         return DataBase().retrieve_data_passwords()
     
     #Вызов функции создания таблицы паролей
-    def add_password(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
+    def add_password_api(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
         return DataBase.create_passwords_db(self, name, name_sit, login, mail, password)
     
     #Вызов функции обновления таблицы паролей
-    def uptade_password(self, id:int, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
+    def uptade_password_api(self, id:int, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
         return DataBase.update_password(self, id, name, name_sit, login, mail, password)
     
     #Вызов функции генерации ключей шифрования
-    def keys_generation(self):
+    def keys_generation_api(self):
         Keys().run()
     
     #Вызов функции шифрования текста    
-    def encryption_data(self, data:str):
+    def encryption_data_api(self, data:str):
         return EncryptionText(data).encryption_text()
     
     #Вызов функции дешифровки данных
-    def decryption_data(self, data:bytes):
+    def decryption_data_api(self, data:bytes):
         return Decryption(data).decryption()
+    
+    #Вызов функции удаления данных
+    def del_data_api(self, id:int):
+        return DataBase.del_data(self, id)

@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QAbstractTableModel, Qt
+from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex
 import chardet
 from src.api import API
 import logging
@@ -20,11 +20,18 @@ class PasswordsTabel(QAbstractTableModel):
                     values.append(value)
                 else:
                     try:
-                        values.append(API.decryption_data(self, value))
+                        values.append(API.decryption_data_api(self, value))
                     except TypeError:
                         values.append("")
                 if len(values) == len(data[key]):
                     data[key] = values
+        
+        return data
+
+    #Обновление id данных
+    def update_num_id(self, data:list):
+        for key in range(len(data)):
+            data[key][0] = key+1
         
         return data
     
@@ -42,9 +49,11 @@ class PasswordsTabel(QAbstractTableModel):
             return None
         
         if role == Qt.ItemDataRole.DisplayRole:
+            if not self._data:
+                return ""
             if type(self._data[index.row()][index.column()]) == bytes:
                 try:
-                    return API.decryption_data(self, self._data[index.row()][index.column()])
+                    return API.decryption_data_api(self, self._data[index.row()][index.column()])
                 except TypeError:
                     return ""
             else:
@@ -59,12 +68,15 @@ class PasswordsTabel(QAbstractTableModel):
             self._data[index.row()][index.column()] = value
             self.dataChanged.emit(index, index, [Qt.ItemDataRole.DisplayRole])
             if type(self._data[index.row()][-1]) != bytes:
-                self._data[index.row()][-1] = API.encryption_data(self, self._data[index.row()][-1])
-            API.uptade_password(self, id=self._data[index.row()][0], name=self._data[index.row()][1], name_sit=self._data[index.row()][2], login=self._data[index.row()][3], mail=self._data[index.row()][4], password=self._data[index.row()][-1])
+                self._data[index.row()][-1] = API.encryption_data_api(self, self._data[index.row()][-1])
+            API.uptade_password_api(self, id=self._data[index.row()][0], name=self._data[index.row()][1], name_sit=self._data[index.row()][2], login=self._data[index.row()][3], mail=self._data[index.row()][4], password=self._data[index.row()][-1])
             return True
         return False
     
+    #Метод выдающий флаги ячейкам
     def flags(self, index):
+        if index.column() == 0:
+            return Qt.ItemFlag.NoItemFlags
         return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsEditable
     
     #Функция возвращающая заголовки в таблицу
@@ -74,3 +86,11 @@ class PasswordsTabel(QAbstractTableModel):
                 return self._header[section]
             else:
                 return str(section+1)
+    
+    #Метод удаления строк
+    def removeRow(self, row, parent=QModelIndex()):
+        self.beginRemoveRows(parent, row, row)
+        del self._data[row]
+        self._data = self.update_num_id(self._data)
+        self.endRemoveRows()
+        return True

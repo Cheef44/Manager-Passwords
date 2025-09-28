@@ -27,7 +27,7 @@ class DataBase:
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute("""CREATE TABLE IF NOT EXISTS password(
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 name_sit TEXT,
                 login TEXT,
@@ -73,3 +73,24 @@ class DataBase:
                 return passwords
             except:
                 pass
+    
+    #Удаление данных
+    def del_data(self, id:int):
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM password WHERE id=?;", (id))
+            cursor.execute("""CREATE TABLE temp(
+                id INTEGER PRIMARY KEY,
+                name TEXT,
+                name_sit TEXT,
+                login TEXT,
+                mail BLOB,
+                password BLOB NOT NULL);
+            """)
+            cursor.execute("""INSERT INTO temp (id, name, password)
+                SELECT ROW_NUMBER() OVER (ORDER BY id), name, password
+                FROM password;
+                """)
+            
+            cursor.execute("DROP TABLE password;")
+            cursor.execute("ALTER TABLE temp RENAME TO password;")

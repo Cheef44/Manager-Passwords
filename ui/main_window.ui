@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>618</height>
+    <height>705</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,14 @@
       <item>
        <widget class="QPushButton" name="add_data">
         <property name="text">
-         <string>PushButton</string>
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="csv_import">
+        <property name="text">
+         <string> ↓</string>
         </property>
        </widget>
       </item>

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'ui\main_window.ui'
+# Form implementation generated from reading ui file '.\ui\main_window.ui'
 #
 # Created by: PyQt6 UI code generator 6.7.1
 #
@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 618)
+        MainWindow.resize(800, 705)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -22,6 +22,9 @@ class Ui_MainWindow(object):
         self.add_data = QtWidgets.QPushButton(parent=self.centralwidget)
         self.add_data.setObjectName("add_data")
         self.header.addWidget(self.add_data)
+        self.csv_import = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.csv_import.setObjectName("csv_import")
+        self.header.addWidget(self.csv_import)
         self.search = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.search.setObjectName("search")
         self.header.addWidget(self.search)
@@ -49,5 +52,16 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.add_data.setText(_translate("MainWindow", "+"))
-        self.user_name.setText(_translate("MainWindow", "Name"))
+        self.csv_import.setText(_translate("MainWindow", " ↓"))
+        self.user_name.setText(_translate("MainWindow", "TextLabel"))
         self.list_passwords.setText(_translate("MainWindow", "Список паролей"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec())

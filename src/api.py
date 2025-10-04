@@ -7,6 +7,7 @@ from src.db import DataBase
 from src.generation_keys import Keys
 from src.encryption import EncryptionText
 from src.decryption import Decryption
+from src.csv_import import PasswordCSV
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -52,3 +53,7 @@ class API:
     #Вызов функции удаления данных
     def del_data_api(self, id:int):
         return DataBase.del_data(self, id)
+    
+    #Вызов функции сериализации данных из файла csv
+    def import_csv_passwords_api(self, file_name):
+        return PasswordCSV(file_name).processing_csv()

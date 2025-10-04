@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QAbstractTableModel, Qt, QModelIndex
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex
 import chardet
 from src.api import API
 import logging

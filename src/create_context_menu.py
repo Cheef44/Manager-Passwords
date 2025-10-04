@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QMenu
-from PyQt6.QtGui import QCursor
+from PySide6.QtWidgets import QWidget, QMenu
+from PySide6.QtGui import QCursor
 
 #Класс контекстного меню
 class ContextMenu(QWidget):

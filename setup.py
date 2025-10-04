@@ -1,5 +1,5 @@
 from scripts.main import LogInApp
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 import sys
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
 from src.log_in_interface import Ui_log_in
 from src.main_window_interface import Ui_MainWindow
 from src.dialog_add_password_interface import Ui_Add_password
-from PySide6.QtWidgets import QMainWindow, QDialog
+from src.dialog_csv_import_interface import Ui_Dialog
+from PySide6.QtWidgets import QMainWindow, QDialog, QFileDialog
 from src.api import API
 from src.table_model import PasswordsTabel
 from PySide6.QtWidgets import QHeaderView
@@ -49,6 +50,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.add_data.clicked.connect(self.open_dialog_add_password)
         self.table_passwords.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.table_passwords.customContextMenuRequested.connect(self.del_context_menu)
+        self.csv_import.clicked.connect(self.open_dialog_import_passwords)
     
     #Открытие диалогового окна
     @Slot()
@@ -67,10 +69,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.table_passwords.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
             self.table_passwords.setModel(model_table)
     
+    #Контекстное меню удаления строки в таблице
     def del_context_menu(self, position):
         index = self.table_passwords.indexAt(position)
         ContextMenu(menu={"Удалить": lambda: API.del_data_api(self, str(index.row()+1))})
         self.table_passwords.model().removeRow(row=index.row())
+    
+    #Метод открытия окна импорта паролей из csv файла
+    @Slot()
+    def open_dialog_import_passwords(self):
+        dialog_windows = DialogImportPasswords()
+        dialog_windows.saved_table_passwords_csv.connect(self.update_table)
+        dialog_windows.exec()
         
 
 #Диалоговое окно добавления пароля
@@ -99,3 +109,34 @@ class DialogAddPassword(Ui_Add_password, QDialog):
             self.saved_table_passwords.emit(True)
             self.accept()
             self.saved_table_passwords.emit(False)
+
+#Класс диалогового окна импорта паролей
+class DialogImportPasswords(Ui_Dialog, QDialog):
+    #Сигнал сохранения записи в базе данных
+    saved_table_passwords_csv = Signal(bool)
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        try:
+            self.buttonBox.accepted.disconnect()
+        except TypeError:
+            pass
+        self.button_dir.clicked.connect(self.open_dialog_file)
+        self.buttonBox.accepted.connect(self.import_csv_passwords)
+    
+    #Метод открытия окна файлового менеджера    
+    def open_dialog_file(self):
+        csv_file, _ = QFileDialog.getOpenFileName(self, "Выберите CSV файлы", "C:/", "CSV файлы (*.csv)")
+        self.name_dir.setText(csv_file)
+    
+    #Метод вызывающий функцию сериализации и сохроняющий все данные в таблице
+    def import_csv_passwords(self):
+        if self.name_dir.text():
+            passwords_csv = API.import_csv_passwords_api(self, self.name_dir.text())
+            for value in passwords_csv:
+                API.add_password_api(self, name=value["name_sit"], name_sit=value["url"], login=value["username"], mail=value["username"], password=value["password"])
+            self.saved_table_passwords_csv.emit(True)
+            self.accept()
+            self.saved_table_passwords_csv.emit(False)
+        else:
+            self.name_dir.setStyleSheet("border: 1px solid red;")

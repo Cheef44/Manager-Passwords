@@ -58,6 +58,8 @@ class DataBase:
                 sault = [[[]]]
             user_name = cursor.execute("""SELECT user_name FROM user""").fetchall()
             user_password = cursor.execute("""SELECT user_password FROM user""").fetchall()
+            cursor.close()
+            conn.commit()
             return {
                 "sault":sault[0][0],
                 "user_name":user_name[0][0],
@@ -73,6 +75,8 @@ class DataBase:
                 return passwords
             except:
                 pass
+            cursor.close()
+            conn.commit()
     
     #Удаление данных
     def del_data(self, id:int):
@@ -87,10 +91,12 @@ class DataBase:
                 mail BLOB,
                 password BLOB NOT NULL);
             """)
-            cursor.execute("""INSERT INTO temp (id, name, password)
-                SELECT ROW_NUMBER() OVER (ORDER BY id), name, password
+            cursor.execute("""INSERT INTO temp (id, name, password, name_sit, mail, login)
+                SELECT ROW_NUMBER() OVER (ORDER BY id), name, password, name_sit, mail, login
                 FROM password;
                 """)
             
             cursor.execute("DROP TABLE password;")
             cursor.execute("ALTER TABLE temp RENAME TO password;")
+            cursor.close()
+            conn.commit()

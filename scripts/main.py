@@ -10,6 +10,8 @@ from PySide6.QtCore import Signal, Slot
 import logging
 from src.create_context_menu import ContextMenu
 from PySide6.QtCore import Qt
+import json
+import os
 
 #Класс функциональности интерфейса регистрации и авторизации
 class LogInApp(Ui_log_in, QMainWindow):
@@ -126,8 +128,21 @@ class DialogImportPasswords(Ui_Dialog, QDialog):
     
     #Метод открытия окна файлового менеджера    
     def open_dialog_file(self):
-        csv_file, _ = QFileDialog.getOpenFileName(self, "Выберите CSV файлы", "C:/", "CSV файлы (*.csv)")
+        csv_path = "C:/"
+        with open("config\config.json", "r") as config:
+            config_file = json.load(config)
+        try:
+            csv_path = config_file["path"]["default_csv_path"]
+        except:
+            config_file["path"]["default_csv_path"] = os.path.dirname(os.path.abspath(__file__))
+            with open("config\config.json", "w") as config:
+                json.dump(config_file, config, indent=4)
+                
+        csv_file, _ = QFileDialog.getOpenFileName(self, "Выберите CSV файлы", csv_path, "CSV файлы (*.csv)")
         self.name_dir.setText(csv_file)
+        with open("config\config.json", "w") as config:
+            config_file["path"]["default_csv_path"] = os.path.dirname(os.path.abspath(csv_file))
+            json.dump(config_file, config, indent=4)
     
     #Метод вызывающий функцию сериализации и сохроняющий все данные в таблице
     def import_csv_passwords(self):

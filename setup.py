@@ -1,9 +1,4 @@
-from scripts.main import LogInApp
-from PySide6.QtWidgets import QApplication
-import sys
+from scripts.main import main
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = LogInApp()
-    window.show()
-    sys.exit(app.exec())
+    main()

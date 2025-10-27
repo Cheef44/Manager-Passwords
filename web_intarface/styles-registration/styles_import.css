@@ -1,2 +1,8 @@
-@import url('user-input/user-input.css');
-@import url('user-input/user-button/user-button.css');
+@import url('registration/user-input/user-input.css');
+@import url('registration/user-input/user-button/user-button.css');
+@import url('registration/registration.css');
+@import url('global.css');
+@import url('registration/user-input/__user-name/user-input__user-name.css');
+@import url('registration/user-input/user-button/user-button.css');
+@import url('registration/user-input/user-button/__registration/user-button__registration.css');
+@import url('registration/user-input/user-button/__log-in/user-button__log-in.css');

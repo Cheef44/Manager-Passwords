@@ -1,0 +1,9 @@
+.user-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-content: center;
+    flex-direction: column;
+    width: 70%;
+    gap: 15px;
+}

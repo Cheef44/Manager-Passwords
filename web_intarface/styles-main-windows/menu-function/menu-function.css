@@ -1,0 +1,11 @@
+.menu-function {
+    background-color: #4A4949;
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

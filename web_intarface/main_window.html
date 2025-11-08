@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles-main-windows/styles_import.css">
+    <title>Manager passwords</title>
+</head>
+<body>
+    <header class="menu-function">
+        <div class="button-menu">
+            <button id="button-menu__add-password">+</button>
+            <button id="button-menu__import-password">↓</button>
+            <button id="button-menu__export-password">↑</button>
+        </div>
+        <input id="menu-function__search-password" type="text" placeholder="Поиск...">
+    </header>
+    <div class="menu-password">
+        <table id="table-password">
+            <thead class="table-password__head">
+                <th id="table-password__id">&nbsp;</th>
+                <th>Имя записи</th>
+                <th>Имя сайта/ссылка</th>
+                <th>Логин</th>
+                <th>Почта</th>
+                <th>Пароль</th>
+            </thead>
+            <tbody id="table-password__body">
+
+            </tbody>
+        </table>
+    </div>
+    <script type="module" src="js/table-password.js"></script>
+</body>
+</html>

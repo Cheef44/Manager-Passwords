@@ -1,4 +1,5 @@
 //Функция регистрации
+
 async function registration() {
     var user_name = String(document.getElementById("user-input__user-name").value);
     var password_1 = String(document.getElementById("user-input__password1").value);
@@ -21,7 +22,7 @@ async function log_in() {
         var ckeck_registration = await window.pywebview.api.log_in_api(user_name, password_1);
         
         if (ckeck_registration === true){
-            await window.pywebview.api.open_html_inteface_api("web_intarface/index.html");
+            await window.pywebview.api.open_html_inteface_api("web_intarface/main_window.html");
         }
     }
 }

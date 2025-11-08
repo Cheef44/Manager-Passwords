@@ -9,6 +9,7 @@ from src.encryption import EncryptionText
 from src.decryption import Decryption
 from src.csv_import import PasswordCSV
 import webview
+import base64
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -29,7 +30,16 @@ class API:
     
     #Вызов функции получения данных паролей
     def data_passwords_api(self):
-        return DataBase().retrieve_data_passwords()
+        data = []
+        for value in DataBase().retrieve_data_passwords():
+            str_data = []
+            for i in value:
+                try:
+                    str_data.append(base64.b64encode(i).decode('utf-8'))
+                except TypeError:
+                    str_data.append(i)
+            data.append(str_data)
+        return data 
     
     #Вызов функции создания таблицы паролей
     def add_password_api(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
@@ -62,3 +72,10 @@ class API:
     #Функция переключения окна
     def open_html_inteface_api(self, url):
         webview.windows[0].load_url(url)
+        return True
+    
+    #Функция изменения размера окна веб-интерфейса
+    def resize_window_api(self, width, height):
+        window = webview.windows[0]
+        window.resize(width, height)
+        return True

@@ -16,6 +16,18 @@
         <input id="menu-function__search-password" type="text" placeholder="Поиск...">
     </header>
     <div class="menu-password">
+        <div id="modal-window" style="display:none;" class="modal-window">
+            <div class="modal-window__content">
+                <span id="modal-window__close" class="modal-window__close">&times;</span>
+                <h2>Добавить запись</h2>
+                <input type="text" id="modal-window__input-name-record" placeholder="Имя записи">
+                <input type="text" id="modal-window__input-site-link" placeholder="Имя сайта/ссылка">
+                <input type="text" id="modal-window__input-login" placeholder="Логин">
+                <input type="text" id="modal-window__input-email" placeholder="Почта">
+                <input type="text" id="modal-window__input-password" placeholder="Пароль">
+                <button type="button" id="modal-window__button-save-record">Сохранить</button>
+            </div>
+        </div>
         <table id="table-password">
             <thead class="table-password__head">
                 <th id="table-password__id">&nbsp;</th>
@@ -31,5 +43,6 @@
         </table>
     </div>
     <script type="module" src="js/table-password.js"></script>
+    <script type="module" src="js/add_password.js" defer></script>
 </body>
 </html>

@@ -149,7 +149,7 @@ class DialogImportPasswords(Ui_Dialog, QDialog):
         if self.name_dir.text():
             passwords_csv = API.import_csv_passwords_api(self, self.name_dir.text())
             for value in passwords_csv:
-                API.add_password_api(self, name=value["name_sit"], name_sit=value["url"], login=value["username"], mail=value["username"], password=value["password"])
+                API.add_password_api(self, name=value["name_sit"], name_sit=value["url"], login=value["username"], mail=API.encryption_data_api(self, value["username"]), password=API.encryption_data_api(self, value["password"]))
             self.saved_table_passwords_csv.emit(True)
             self.accept()
             self.saved_table_passwords_csv.emit(False)

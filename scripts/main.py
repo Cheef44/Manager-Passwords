@@ -2,6 +2,7 @@ from src.log_in_interface import Ui_log_in
 from src.main_window_interface import Ui_MainWindow
 from src.dialog_add_password_interface import Ui_Add_password
 from src.dialog_csv_import_interface import Ui_Dialog
+from src.dialog_csv_export_interface import Export_Ui_Dialog
 from PySide6.QtWidgets import QMainWindow, QDialog, QFileDialog
 from src.api import API
 from src.table_model import PasswordsTabel
@@ -53,6 +54,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.table_passwords.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.table_passwords.customContextMenuRequested.connect(self.del_context_menu)
         self.csv_import.clicked.connect(self.open_dialog_import_passwords)
+        self.csv_export.clicked.connect(self.open_dialog_export_passwords)
     
     #Открытие диалогового окна
     @Slot()
@@ -82,6 +84,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def open_dialog_import_passwords(self):
         dialog_windows = DialogImportPasswords()
         dialog_windows.saved_table_passwords_csv.connect(self.update_table)
+        dialog_windows.exec()
+    
+    #Метод открытия окна экспорта паролей в csv файл
+    def open_dialog_export_passwords(self):
+        dialog_windows = DialogExportPasswords()
         dialog_windows.exec()
         
 
@@ -155,3 +162,40 @@ class DialogImportPasswords(Ui_Dialog, QDialog):
             self.saved_table_passwords_csv.emit(False)
         else:
             self.name_dir.setStyleSheet("border: 1px solid red;")
+
+#Класс диалогового окна экспорта csv файла
+class DialogExportPasswords(Export_Ui_Dialog, QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        try:
+            self.buttonBox.accepted.disconnect()
+        except TypeError:
+            pass
+        
+        self.button_dir.clicked.connect(self.open_dialog_file)
+        self.buttonBox.accepted.connect(self.export_csv_passwords)
+    
+    #Метод открытия окна файлового менеджера
+    def open_dialog_file(self):
+        csv_path = "C:/"
+        
+        with open("config\config.json", "r") as config:
+            config_file = json.load(config)
+        try:
+            csv_path = config_file["path"]["default_csv_path"]
+        except:
+            config_file["path"]["default_csv_path"] = os.path.dirname(os.path.abspath(__file__))
+            with open("config\config.json", "w") as config:
+                json.dump(config_file, config, indent=4)
+                 
+        csv_file, _ = QFileDialog.getOpenFileName(self, "Выберите CSV файлы", csv_path, "CSV файлы (*.csv)")
+        self.name_dir.setText(csv_file)
+        with open("config\config.json", "w") as config:
+            config_file["path"]["default_csv_path"] = os.path.dirname(os.path.abspath(csv_file))
+            json.dump(config_file, config, indent=4)
+    
+    #Метод вызова функции экспорта
+    def export_csv_passwords(self):
+        API.export_csv_passwords_api(self, self.name_dir.text())
+        self.accept()

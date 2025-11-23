@@ -8,6 +8,7 @@ from src.generation_keys import Keys
 from src.encryption import EncryptionText
 from src.decryption import Decryption
 from src.csv_import import PasswordCSV
+from src.csv_export import PasswordCSVExport
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -57,3 +58,7 @@ class API:
     #Вызов функции сериализации данных из файла csv
     def import_csv_passwords_api(self, file_name):
         return PasswordCSV(file_name).processing_csv()
+    
+    #Вызов функции экспорта паролей в csv файл
+    def export_csv_passwords_api(self, file_name):
+        return PasswordCSVExport(file_name).write_file_csv()

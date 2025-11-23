@@ -40,6 +40,11 @@ class Ui_MainWindow(object):
 
         self.header.addWidget(self.csv_import)
 
+        self.csv_export = QPushButton(self.centralwidget)
+        self.csv_export.setObjectName(u"csv_export")
+
+        self.header.addWidget(self.csv_export)
+
         self.search = QLineEdit(self.centralwidget)
         self.search.setObjectName(u"search")
 
@@ -81,6 +86,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.add_data.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.csv_import.setText(QCoreApplication.translate("MainWindow", u" \u2193", None))
+        self.csv_export.setText(QCoreApplication.translate("MainWindow", u"\u2191", None))
         self.user_name.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.list_passwords.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0430\u0440\u043e\u043b\u0435\u0439", None))
     # retranslateUi

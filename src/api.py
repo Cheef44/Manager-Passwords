@@ -34,20 +34,23 @@ class API:
         for value in DataBase().retrieve_data_passwords():
             str_data = []
             for i in value:
+                if i == b'':
+                    i = ''
                 try:
-                    str_data.append(base64.b64encode(i).decode('utf-8'))
+                    str_data.append(self.decryption_data_api(i))
                 except TypeError:
                     str_data.append(i)
             data.append(str_data)
+            print(data)
         return data 
     
     #Вызов функции создания таблицы паролей
     def add_password_api(self, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
-        return DataBase.create_passwords_db(self, name, name_sit, login, mail, password)
+        return DataBase.create_passwords_db(self, name, name_sit, login, self.encryption_data_api(mail), self.encryption_data_api(password))
     
     #Вызов функции обновления таблицы паролей
     def uptade_password_api(self, id:int, name:str=None, name_sit:str=None, login:str=None, mail:bytes=None, password:bytes=None):
-        return DataBase.update_password(self, id, name, name_sit, login, mail, password)
+        return DataBase.update_password(self, id, name, name_sit, login, self.encryption_data_api(mail), self.encryption_data_api(password))
     
     #Вызов функции генерации ключей шифрования
     def keys_generation_api(self):

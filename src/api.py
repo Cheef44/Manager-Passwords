@@ -9,6 +9,7 @@ from src.encryption import EncryptionText
 from src.decryption import Decryption
 from src.csv_import import PasswordCSV
 from src.csv_export import PasswordCSVExport
+from src.search import Search
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -62,3 +63,7 @@ class API:
     #Вызов функции экспорта паролей в csv файл
     def export_csv_passwords_api(self, file_name):
         return PasswordCSVExport(file_name).write_file_csv()
+    
+    #Вызов функции поиска
+    def search_passwords_api(self, key_name, array):
+        return Search(key_name, array).multidimensional_array()

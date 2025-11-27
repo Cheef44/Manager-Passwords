@@ -5,7 +5,7 @@ from src.dialog_csv_import_interface import Ui_Dialog
 from src.dialog_csv_export_interface import Export_Ui_Dialog
 from PySide6.QtWidgets import QMainWindow, QDialog, QFileDialog
 from src.api import API
-from src.table_model import PasswordsTabel
+from src.table_model import PasswordsTabel, MultiIndexFilter
 from PySide6.QtWidgets import QHeaderView
 from PySide6.QtCore import Signal, Slot
 import logging
@@ -48,6 +48,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.user_name_data = user_name_data
         self.user_name.setText(user_name_data)
+        self.proxy = MultiIndexFilter(None)
         self.setMouseTracking(True)
         self.update_table()
         self.add_data.clicked.connect(self.open_dialog_add_password)
@@ -55,7 +56,27 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.table_passwords.customContextMenuRequested.connect(self.del_context_menu)
         self.csv_import.clicked.connect(self.open_dialog_import_passwords)
         self.csv_export.clicked.connect(self.open_dialog_export_passwords)
+        self.search.textEdited.connect(self.search_passwords)
     
+    #Запуск поиска
+    def search_passwords(self):
+        self.proxy.allowed_index = None
+        self.proxy.invalidateFilter()
+        self.table_passwords.setModel(self.proxy)
+        all_data = []
+        
+        for row in range(self.table_passwords.model().rowCount()):
+            row_data = []
+            for column in range(self.table_passwords.model().columnCount()):
+                item = self.table_passwords.model().data(self.table_passwords.model().index(row, column))
+                row_data.append(item)
+            all_data.append(row_data)
+            
+        index_passwords = API.search_passwords_api(self, self.search.text(), all_data)
+        self.proxy.allowed_index = index_passwords
+        self.proxy.invalidateFilter()
+        self.table_passwords.setModel(self.proxy)
+        
     #Открытие диалогового окна
     @Slot()
     def open_dialog_add_password(self):
@@ -66,12 +87,16 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     #Функция обнавления таблицы паролей
     @Slot(bool)
     def update_table(self):
+        self.proxy.allowed_index = None
+        self.proxy.invalidateFilter()
         data = API.data_passwords_api(self)
         if data:
             header = ["ID","Имя записи", "Имя сайта/ссылка", "Логин", "Почта", "Пароль"]
+            
             model_table = PasswordsTabel(data, header)
+            self.proxy.setSourceModel(model_table)
             self.table_passwords.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-            self.table_passwords.setModel(model_table)
+            self.table_passwords.setModel(self.proxy)
     
     #Контекстное меню удаления строки в таблице
     def del_context_menu(self, position):

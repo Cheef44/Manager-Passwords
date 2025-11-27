@@ -1,4 +1,4 @@
-from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, QSortFilterProxyModel
 import chardet
 from src.api import API
 import logging
@@ -94,3 +94,15 @@ class PasswordsTabel(QAbstractTableModel):
         self._data = self.update_num_id(self._data)
         self.endRemoveRows()
         return True
+
+#Класс фильтрации строк таблицы по индексу
+class MultiIndexFilter(QSortFilterProxyModel):
+    def __init__(self, allowed_index:list, parent=None):
+        super().__init__(parent)
+        self.allowed_index = allowed_index
+    
+    #Метод фильтрации строк по множеству индексов
+    def filterAcceptsRow(self, source_row, source_parent):
+        if self.allowed_index is None:
+            return True
+        return source_row in self.allowed_index

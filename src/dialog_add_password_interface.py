@@ -17,20 +17,21 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QCheckBox, QDialog,
     QDialogButtonBox, QHBoxLayout, QLabel, QLineEdit,
-    QSizePolicy, QVBoxLayout, QWidget)
+    QPushButton, QSizePolicy, QSpinBox, QVBoxLayout,
+    QWidget)
 
 class Ui_Add_password(object):
     def setupUi(self, Add_password):
         if not Add_password.objectName():
             Add_password.setObjectName(u"Add_password")
         Add_password.setEnabled(True)
-        Add_password.resize(483, 194)
+        Add_password.resize(483, 242)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Add_password.sizePolicy().hasHeightForWidth())
         Add_password.setSizePolicy(sizePolicy)
-        Add_password.setMaximumSize(QSize(483, 194))
+        Add_password.setMaximumSize(QSize(483, 242))
         Add_password.setFocusPolicy(Qt.FocusPolicy.TabFocus)
         Add_password.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
         Add_password.setAcceptDrops(False)
@@ -42,10 +43,36 @@ class Ui_Add_password(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.checkBox = QCheckBox(Add_password)
-        self.checkBox.setObjectName(u"checkBox")
+        self.gen_check = QCheckBox(Add_password)
+        self.gen_check.setObjectName(u"gen_check")
 
-        self.verticalLayout.addWidget(self.checkBox)
+        self.verticalLayout.addWidget(self.gen_check)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, -1, 200, -1)
+        self.len_password = QSpinBox(Add_password)
+        self.len_password.setObjectName(u"len_password")
+        self.len_password.setEnabled(True)
+        self.len_password.setAutoFillBackground(False)
+        self.len_password.setInputMethodHints(Qt.InputMethodHint.ImhDigitsOnly)
+        self.len_password.setFrame(True)
+        self.len_password.setProperty(u"showGroupSeparator", False)
+        self.len_password.setMinimum(8)
+
+        self.horizontalLayout.addWidget(self.len_password)
+
+        self.gen_password = QPushButton(Add_password)
+        self.gen_password.setObjectName(u"gen_password")
+        self.gen_password.setEnabled(True)
+
+        self.horizontalLayout.addWidget(self.gen_password)
+
+        self.horizontalLayout.setStretch(0, 5)
+        self.horizontalLayout.setStretch(1, 15)
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.name = QHBoxLayout()
         self.name.setObjectName(u"name")
@@ -171,7 +198,8 @@ class Ui_Add_password(object):
 #if QT_CONFIG(accessibility)
         Add_password.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
-        self.checkBox.setText(QCoreApplication.translate("Add_password", u"\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u043f\u0430\u0440\u043e\u043b\u044f", None))
+        self.gen_check.setText(QCoreApplication.translate("Add_password", u"\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u043f\u0430\u0440\u043e\u043b\u044f", None))
+        self.gen_password.setText(QCoreApplication.translate("Add_password", u"\u0421\u0433\u0435\u043d\u0435\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
         self.name_label.setText(QCoreApplication.translate("Add_password", u"\u0418\u043c\u044f \u0437\u0430\u043f\u0438\u0441\u0438", None))
         self.sit_label.setText(QCoreApplication.translate("Add_password", u"\u0421\u0430\u0439\u0442", None))
         self.login_label.setText(QCoreApplication.translate("Add_password", u"\u041b\u043e\u0433\u0438\u043d", None))

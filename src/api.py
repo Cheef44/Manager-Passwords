@@ -10,6 +10,7 @@ from src.decryption import Decryption
 from src.csv_import import PasswordCSV
 from src.csv_export import PasswordCSVExport
 from src.search import Search
+from src.generation_password import GenerationPassword
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -67,3 +68,7 @@ class API:
     #Вызов функции поиска
     def search_passwords_api(self, key_name, array):
         return Search(key_name, array).multidimensional_array()
+    
+    #Вызов функции генирации пароля
+    def generation_password_api(self, len_password):
+        return GenerationPassword(len_password).generation_password()

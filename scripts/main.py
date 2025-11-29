@@ -3,7 +3,7 @@ from src.main_window_interface import Ui_MainWindow
 from src.dialog_add_password_interface import Ui_Add_password
 from src.dialog_csv_import_interface import Ui_Dialog
 from src.dialog_csv_export_interface import Export_Ui_Dialog
-from PySide6.QtWidgets import QMainWindow, QDialog, QFileDialog
+from PySide6.QtWidgets import QMainWindow, QDialog, QFileDialog, QCheckBox
 from src.api import API
 from src.table_model import PasswordsTabel, MultiIndexFilter
 from PySide6.QtWidgets import QHeaderView
@@ -124,12 +124,17 @@ class DialogAddPassword(Ui_Add_password, QDialog):
     
     def __init__(self):
         super().__init__()
+        
         self.setupUi(self)
+        self.len_password.hide()
+        self.gen_password.hide()
         try:
             self.buttonBox.accepted.disconnect()
         except TypeError:
             pass
         self.buttonBox.accepted.connect(self.required_fields_validator)
+        self.gen_check.checkStateChanged.connect(self.check_gen_checkbox)
+        self.gen_password.clicked.connect(self.generation_password)
     
     #Валидатор обязательных полей
     @Slot()
@@ -143,6 +148,19 @@ class DialogAddPassword(Ui_Add_password, QDialog):
             self.saved_table_passwords.emit(True)
             self.accept()
             self.saved_table_passwords.emit(False)
+    
+    def check_gen_checkbox(self, state):
+        if state == Qt.CheckState.Checked:
+            self.len_password.show()
+            self.gen_password.show()
+        else:
+            self.len_password.hide()
+            self.gen_password.hide()
+    
+    def generation_password(self):
+        gen_password = API.generation_password_api(self, int(self.len_password.text()))
+        if gen_password:
+            self.password_input.setText(gen_password)
 
 #Класс диалогового окна импорта паролей
 class DialogImportPasswords(Ui_Dialog, QDialog):

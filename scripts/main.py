@@ -102,7 +102,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def del_context_menu(self, position):
         index = self.table_passwords.indexAt(position)
         ContextMenu(menu={"Удалить": lambda: API.del_data_api(self, str(index.row()+1))})
-        self.table_passwords.model().removeRow(row=index.row())
+        self.proxy.sourceModel().removeRow(row=index.row())
     
     #Метод открытия окна импорта паролей из csv файла
     @Slot()

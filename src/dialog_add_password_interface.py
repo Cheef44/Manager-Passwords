@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
-    QHBoxLayout, QLabel, QLineEdit, QSizePolicy,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QCheckBox, QDialog,
+    QDialogButtonBox, QHBoxLayout, QLabel, QLineEdit,
+    QSizePolicy, QVBoxLayout, QWidget)
 
 class Ui_Add_password(object):
     def setupUi(self, Add_password):
@@ -42,6 +42,11 @@ class Ui_Add_password(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.checkBox = QCheckBox(Add_password)
+        self.checkBox.setObjectName(u"checkBox")
+
+        self.verticalLayout.addWidget(self.checkBox)
+
         self.name = QHBoxLayout()
         self.name.setObjectName(u"name")
         self.name_label = QLabel(Add_password)
@@ -166,6 +171,7 @@ class Ui_Add_password(object):
 #if QT_CONFIG(accessibility)
         Add_password.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
+        self.checkBox.setText(QCoreApplication.translate("Add_password", u"\u0413\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u044f \u043f\u0430\u0440\u043e\u043b\u044f", None))
         self.name_label.setText(QCoreApplication.translate("Add_password", u"\u0418\u043c\u044f \u0437\u0430\u043f\u0438\u0441\u0438", None))
         self.sit_label.setText(QCoreApplication.translate("Add_password", u"\u0421\u0430\u0439\u0442", None))
         self.login_label.setText(QCoreApplication.translate("Add_password", u"\u041b\u043e\u0433\u0438\u043d", None))

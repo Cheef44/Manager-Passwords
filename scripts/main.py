@@ -100,9 +100,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     
     #Контекстное меню удаления строки в таблице
     def del_context_menu(self, position):
-        index = self.table_passwords.indexAt(position)
+        proxy_index = self.table_passwords.indexAt(position)
+        index = self.proxy.mapToSource(proxy_index)
         ContextMenu(menu={"Удалить": lambda: API.del_data_api(self, str(index.row()+1))})
-        self.proxy.sourceModel().removeRow(row=index.row())
+        self.update_table()
+        #self.proxy.sourceModel().removeRow(row=index.row())
     
     #Метод открытия окна импорта паролей из csv файла
     @Slot()

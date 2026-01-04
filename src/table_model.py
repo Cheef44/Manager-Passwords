@@ -20,7 +20,7 @@ class PasswordsTabel(QAbstractTableModel):
                     values.append(value)
                 else:
                     try:
-                        values.append(API.decryption_data_api(self, value))
+                        values.append(API.decryption_data_api(self, value, API.get_password_cache_api(self, "PASSWORD_LOG_IN")))
                     except TypeError:
                         values.append("")
                 if len(values) == len(data[key]):
@@ -53,7 +53,7 @@ class PasswordsTabel(QAbstractTableModel):
                 return ""
             if type(self._data[index.row()][index.column()]) == bytes:
                 try:
-                    return API.decryption_data_api(self, self._data[index.row()][index.column()])
+                    return API.decryption_data_api(self, self._data[index.row()][index.column()], API.get_password_cache_api(self, "PASSWORD_LOG_IN"))
                 except TypeError:
                     return ""
             else:
@@ -68,7 +68,7 @@ class PasswordsTabel(QAbstractTableModel):
             self._data[index.row()][index.column()] = value
             self.dataChanged.emit(index, index, [Qt.ItemDataRole.DisplayRole])
             if type(self._data[index.row()][-1]) != bytes:
-                self._data[index.row()][-1] = API.encryption_data_api(self, self._data[index.row()][-1])
+                self._data[index.row()][-1] = API.encryption_data_api(self, self._data[index.row()][-1], API.get_password_cache_api(self, "PASSWORD_LOG_IN"))
             API.uptade_password_api(self, id=self._data[index.row()][0], name=self._data[index.row()][1], name_sit=self._data[index.row()][2], login=self._data[index.row()][3], mail=self._data[index.row()][4], password=self._data[index.row()][-1])
             return True
         return False

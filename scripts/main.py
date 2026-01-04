@@ -36,9 +36,10 @@ class LogInApp(Ui_log_in, QMainWindow):
     
     #Функция перехода на основное окно
     def swap_mainwindow(self):
-        API.keys_generation_api(self)
+        API.set_password_cache_api(self, "PASSWORD_LOG_IN", self.password_input_1.text())
         self.close()
         self.window = MainWindow(self.login_input.text())
+        API.keys_generation_api(self, API.get_password_cache_api(self,  name_service="PASSWORD_LOG_IN"))
         self.window.show()
 
 #Класс функциональности интерфейса основного окна 
@@ -144,8 +145,8 @@ class DialogAddPassword(Ui_Add_password, QDialog):
         if not self.password_input.text().split():
             self.password_input.setStyleSheet("border: 1px solid red;")
         else:
-            enc_password_input = API.encryption_data_api(self, self.password_input.text())
-            enc_email_input = API.encryption_data_api(self, self.email_input.text())
+            enc_password_input = API.encryption_data_api(self, self.password_input.text(), API.get_password_cache_api(self, "PASSWORD_LOG_IN"))
+            enc_email_input = API.encryption_data_api(self, self.email_input.text(), API.get_password_cache_api(self, "PASSWORD_LOG_IN"))
             API.add_password_api(self, self.name_input.text(), self.sit_input.text(), self.login_input.text(), enc_email_input, enc_password_input)
             self.saved_table_passwords.emit(True)
             self.accept()
@@ -201,7 +202,7 @@ class DialogImportPasswords(Ui_Dialog, QDialog):
         if self.name_dir.text():
             passwords_csv = API.import_csv_passwords_api(self, self.name_dir.text())
             for value in passwords_csv:
-                API.add_password_api(self, name=value["name_sit"], name_sit=value["url"], login=value["username"], mail=API.encryption_data_api(self, value["username"]), password=API.encryption_data_api(self, value["password"]))
+                API.add_password_api(self, name=value["name_sit"], name_sit=value["url"], login=value["username"], mail=API.encryption_data_api(self, value["username"], API.get_password_cache_api(self, "PASSWORD_LOG_IN")), password=API.encryption_data_api(self, value["password"], API.get_password_cache_api(self, "PASSWORD_LOG_IN")))
             self.saved_table_passwords_csv.emit(True)
             self.accept()
             self.saved_table_passwords_csv.emit(False)

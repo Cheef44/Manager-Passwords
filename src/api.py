@@ -11,6 +11,7 @@ from src.csv_import import PasswordCSV
 from src.csv_export import PasswordCSVExport
 from src.search import Search
 from src.generation_password import GenerationPassword
+from src.cache_pwd import CachePassword
 
 #Класс API слоя между логикой и интерфейсом
 class API:
@@ -42,16 +43,16 @@ class API:
         return DataBase.update_password(self, id, name, name_sit, login, mail, password)
     
     #Вызов функции генерации ключей шифрования
-    def keys_generation_api(self):
-        Keys().run()
+    def keys_generation_api(self, password):
+        Keys(password).run()
     
     #Вызов функции шифрования текста    
-    def encryption_data_api(self, data:str):
-        return EncryptionText(data).encryption_text()
+    def encryption_data_api(self, data:str, password:str):
+        return EncryptionText(data, password).encryption_text()
     
     #Вызов функции дешифровки данных
-    def decryption_data_api(self, data:bytes):
-        return Decryption(data).decryption()
+    def decryption_data_api(self, data:bytes, password):
+        return Decryption(data, password).decryption()
     
     #Вызов функции удаления данных
     def del_data_api(self, id:int):
@@ -72,3 +73,15 @@ class API:
     #Вызов функции генирации пароля
     def generation_password_api(self, len_password):
         return GenerationPassword(len_password).generation_password()
+    
+    #Вызов функции помещения данных в кэш
+    def set_password_cache_api(self, name_service, password):
+        CachePassword(password=password, name_service=name_service).set_password()
+    
+    #Вызов функции выдачи данных из кэша
+    def get_password_cache_api(self, name_service):
+        return CachePassword(name_service=name_service).get_password()
+    
+    #Вызов удаления данных из кэша
+    def del_password_api(self, name_service):
+        CachePassword(name_service=name_service).del_password()

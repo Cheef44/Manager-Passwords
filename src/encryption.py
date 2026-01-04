@@ -2,6 +2,7 @@ from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
 import os
 import json
+import hashlib
 
 #Подготовка ключей к шифрованию
 class PreparationEncryption:
@@ -24,11 +25,11 @@ class PreparationEncryption:
             return 'Encryption keys were not found'
         
     #Метод расшифровки синхронного ключа
-    def decrypt_sync_key(self):
+    def decrypt_sync_key(self, password):
         try:
             with open(self.async_private_key_path, 'rb') as private_key:
                 private_key = private_key.read()
-                private_key = RSA.import_key(private_key)
+                private_key = RSA.import_key(private_key, passphrase=password)
                 
             with open(self.sync_key_path, 'rb') as sync_key:
                 sync_key = sync_key.read()
@@ -42,11 +43,13 @@ class PreparationEncryption:
         
 #Класс для шифрования текста
 class EncryptionText(PreparationEncryption):
-    def __init__(self, data:str):
+    def __init__(self, data:str, password:str):
         super().__init__()
         self.data = data
+        self.password = hashlib.sha3_512(bytes(password, encoding='utf-8')).digest()
+        
     #Метод шифрования текста
     def encryption_text(self):
-        encrypt = AES.new(self.decrypt_sync_key(), AES.MODE_CFB, self.vectore())
+        encrypt = AES.new(self.decrypt_sync_key(self.password), AES.MODE_CFB, self.vectore())
         encrypt_text = encrypt.encrypt(bytes(self.data, encoding='utf8'))
         return encrypt_text
